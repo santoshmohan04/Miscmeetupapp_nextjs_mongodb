@@ -1,7 +1,5 @@
 import { useRef } from 'react';
-
-import Card from '../ui/Card';
-import classes from './NewMeetupForm.module.css';
+import { Form, Button, Card, Container } from 'react-bootstrap';
 
 function NewMeetupForm(props) {
   const titleInputRef = useRef();
@@ -28,34 +26,40 @@ function NewMeetupForm(props) {
   }
 
   return (
-    <Card>
-      <form className={classes.form} onSubmit={submitHandler}>
-        <div className={classes.control}>
-          <label htmlFor='title'>Meetup Title</label>
-          <input type='text' required id='title' ref={titleInputRef} />
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='image'>Meetup Image</label>
-          <input type='url' required id='image' ref={imageInputRef} />
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='address'>Address</label>
-          <input type='text' required id='address' ref={addressInputRef} />
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='description'>Description</label>
-          <textarea
-            id='description'
-            required
-            rows='5'
-            ref={descriptionInputRef}
-          ></textarea>
-        </div>
-        <div className={classes.actions}>
-          <button>Add Meetup</button>
-        </div>
-      </form>
-    </Card>
+    <Container className="mt-4">
+      <Card>
+        <Card.Body>
+          <Card.Title className="text-center mb-4">Add New Meetup</Card.Title>
+          <Form onSubmit={submitHandler}>
+            <Form.Group className="mb-3">
+              <Form.Label>Meetup Title</Form.Label>
+              <Form.Control type="text" placeholder="Enter title" ref={titleInputRef} required />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Meetup Image</Form.Label>
+              <Form.Control type="url" placeholder="Image URL" ref={imageInputRef} required />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Address</Form.Label>
+              <Form.Control type="text" placeholder="Address" ref={addressInputRef} required />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" rows={5} ref={descriptionInputRef} required />
+            </Form.Group>
+
+            <div className="text-center">
+              <Button variant="primary" type="submit">
+                Add Meetup
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 

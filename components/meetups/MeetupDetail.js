@@ -1,16 +1,27 @@
-import classes from './MeetupDetail.module.css';
+import { Card, Button, Container } from "react-bootstrap";
+import classes from "./MeetupDetail.module.css";
 
-function MeetupDetail(props) {
+function MeetupDetail({ image, title, address, description, onEdit, onDelete }) {
   return (
-    <section className={classes.detail}>
-      <img
-        src={props.image}
-        alt={props.title}
-      />
-      <h1>{props.title}</h1>
-      <address>{props.address}</address>
-      <p>{props.description}</p>
-    </section>
+    <Container className="mt-4">
+      <Card className="shadow-md">
+        <Card.Img variant="top" src={image} alt={title} className={classes.image} />
+        <Card.Body>
+          <Card.Title>{title}</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted">{address}</Card.Subtitle>
+          <Card.Text>{description}</Card.Text>
+
+          <div className="d-flex justify-content-end">
+            <Button variant="warning" className="me-2" onClick={onEdit}>
+              Edit
+            </Button>
+            <Button variant="danger" onClick={onDelete}>
+              Delete
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 
