@@ -26,7 +26,11 @@ export default async function handler(req, res) {
         return res.status(404).json({ message: 'Meetup not found' });
       }
 
-      const updatedMeetup = sanitizeMeetupPayload(req.body, existingMeetup);
+      const updatedMeetup = sanitizeMeetupPayload({
+        ...req.body,
+        attendeeCount: existingMeetup.attendeeCount,
+        createdAt: existingMeetup.createdAt,
+      });
       const validationErrors = validateMeetupPayload(updatedMeetup);
 
       if (Object.keys(validationErrors).length > 0) {

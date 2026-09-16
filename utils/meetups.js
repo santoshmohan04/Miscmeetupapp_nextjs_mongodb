@@ -56,42 +56,33 @@ function deriveCityFromAddress(address) {
   return segments.length > 1 ? segments[segments.length - 2] : segments[0] || '';
 }
 
-export function sanitizeMeetupPayload(input = {}, existingMeetup = {}) {
-  const category = normalizeCategory(toText(input.category) || existingMeetup.category);
-  const eventType = normalizeFormat(toText(input.eventType) || existingMeetup.eventType);
-  const eventDate = normalizeDate(input.eventDate || existingMeetup.eventDate);
-  const address = toText(input.address) || toText(existingMeetup.address);
-  const city = toText(input.city) || toText(existingMeetup.city) || deriveCityFromAddress(address);
-  const organizerName =
-    toText(input.organizerName) ||
-    toText(existingMeetup.organizerName) ||
-    'Community host';
-  const organizerEmail = toText(input.organizerEmail) || toText(existingMeetup.organizerEmail);
-  const attendeeCountValue = Number(input.attendeeCount ?? existingMeetup.attendeeCount ?? 0);
+export function sanitizeMeetupPayload(input = {}) {
+  const category = normalizeCategory(toText(input.category));
+  const eventType = normalizeFormat(toText(input.eventType));
+  const eventDate = normalizeDate(input.eventDate);
+  const address = toText(input.address);
+  const city = toText(input.city) || deriveCityFromAddress(address);
+  const organizerName = toText(input.organizerName) || 'Community host';
+  const organizerEmail = toText(input.organizerEmail);
+  const attendeeCountValue = Number(input.attendeeCount ?? 0);
   const attendeeCount = Number.isFinite(attendeeCountValue)
     ? Math.max(0, Math.floor(attendeeCountValue))
     : 0;
 
   return {
-    title: toText(input.title) || toText(existingMeetup.title),
-    image: toText(input.image) || toText(existingMeetup.image),
+    title: toText(input.title),
+    image: toText(input.image),
     address,
     city,
-    description: toText(input.description) || toText(existingMeetup.description),
+    description: toText(input.description),
     category,
     eventType,
     eventDate,
     organizerName,
     organizerEmail,
-    isFeatured:
-      typeof input.isFeatured !== 'undefined'
-        ? toBoolean(input.isFeatured)
-        : Boolean(existingMeetup.isFeatured),
+    isFeatured: toBoolean(input.isFeatured),
     attendeeCount,
-    createdAt:
-      toText(existingMeetup.createdAt) ||
-      toText(input.createdAt) ||
-      new Date().toISOString(),
+    createdAt: toText(input.createdAt) || new Date().toISOString(),
   };
 }
 
@@ -145,7 +136,7 @@ export function validateMeetupPayload(payload) {
 }
 
 export function normalizeMeetupDocument(meetup = {}) {
-  const sanitized = sanitizeMeetupPayload(meetup, meetup);
+  const sanitized = sanitizeMeetupPayload(meetup);
 
   return {
     id: meetup._id ? meetup._id.toString() : meetup.id,
@@ -155,7 +146,7 @@ export function normalizeMeetupDocument(meetup = {}) {
 }
 
 export function getMeetupInitialValues(meetup = {}) {
-  const sanitized = sanitizeMeetupPayload(meetup, meetup);
+  const sanitized = sanitizeMeetupPayload(meetup);
 
   return {
     ...sanitized,

@@ -45,7 +45,7 @@ function MeetupForm({
   async function submitHandler(event) {
     event.preventDefault();
 
-    const payload = sanitizeMeetupPayload(formData, initialValues);
+    const payload = sanitizeMeetupPayload(formData);
     const validationErrors = validateMeetupPayload(payload);
 
     if (Object.keys(validationErrors).length > 0) {
