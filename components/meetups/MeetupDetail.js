@@ -171,7 +171,7 @@ function MeetupDetail({
               </div>
 
               {(shareMessage || errorMessage) && (
-                <div className={classes.inlineFeedback}>
+                <div className={classes.inlineFeedback} aria-live='polite'>
                   {shareMessage || errorMessage}
                 </div>
               )}

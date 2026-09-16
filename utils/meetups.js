@@ -149,6 +149,7 @@ export function normalizeMeetupDocument(meetup = {}) {
 
   return {
     id: meetup._id ? meetup._id.toString() : meetup.id,
+    _id: meetup._id ? meetup._id.toString() : meetup._id,
     ...sanitized,
   };
 }

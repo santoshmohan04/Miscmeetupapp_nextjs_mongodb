@@ -12,7 +12,9 @@ function MainNavigation() {
 
         <nav className={classes.nav}>
           <Link href='/'>Explore</Link>
-          <a href='/#discover'>Discover</a>
+          <Link href='/#discover' scroll={false}>
+            Discover
+          </Link>
           <Link href='/new-meetup' className={classes.cta}>
             Host a meetup
           </Link>

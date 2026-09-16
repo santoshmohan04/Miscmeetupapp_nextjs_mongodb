@@ -18,6 +18,10 @@ const SORT_OPTIONS = [
   { value: 'alphabetical', label: 'A to Z' },
 ];
 
+function getEventTimestamp(eventDate) {
+  return eventDate ? new Date(`${eventDate}T00:00:00`).getTime() : Number.MAX_SAFE_INTEGER;
+}
+
 function HomePage({ meetups }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -56,10 +60,7 @@ function HomePage({ meetups }) {
         }
 
         if (selectedSort === 'upcoming') {
-          return (
-            (firstMeetup.eventDate ? new Date(firstMeetup.eventDate) : Number.MAX_SAFE_INTEGER) -
-            (secondMeetup.eventDate ? new Date(secondMeetup.eventDate) : Number.MAX_SAFE_INTEGER)
-          );
+          return getEventTimestamp(firstMeetup.eventDate) - getEventTimestamp(secondMeetup.eventDate);
         }
 
         return (
