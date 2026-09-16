@@ -1,68 +1,101 @@
 .header {
-  width: 100%;
-  height: 5rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 1rem 0 0;
+  backdrop-filter: blur(18px);
+}
+
+.inner {
+  width: min(1200px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.78);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #1abc9c;
-  padding: 0 10%;
+  gap: 1rem;
+}
+
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  color: white;
+  text-decoration: none;
+}
+
+.kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .logo {
-  font-size: 2rem;
-  color: white;
-  font-weight: bold;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
-.header ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.nav {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
 }
 
-.header li {
-  margin-left: 3rem;
-}
-
-.header a {
+.nav a {
+  color: rgba(255, 255, 255, 0.86);
   text-decoration: none;
-  font-size: 1.5rem;
-  color: white;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-.header a:hover,
-.header a:active,
-.header a.active {
-  color: black;
+.nav a:hover,
+.nav a:focus-visible {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.nav a[aria-current='page'] {
+  color: white;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.cta {
+  background: linear-gradient(135deg, #34d399, #14b8a6);
+  color: #03251f !important;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background: linear-gradient(135deg, #6ee7b7, #2dd4bf) !important;
 }
 
 @media (max-width: 768px) {
-  .header {
-    height: auto;
+  .inner {
+    width: min(100%, calc(100% - 1rem));
     flex-direction: column;
-    justify-content: center;
-    gap: 1rem;
+    align-items: flex-start;
     padding: 1rem;
+    border-radius: 20px;
   }
 
-  .logo {
-    font-size: 1.75rem;
+  .nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav a {
+    flex: 1 1 auto;
     text-align: center;
-  }
-
-  .header ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem 1.5rem;
-  }
-
-  .header li {
-    margin-left: 0;
-  }
-
-  .header a {
-    font-size: 1.1rem;
+    padding: 0.75rem 0.85rem;
   }
 }

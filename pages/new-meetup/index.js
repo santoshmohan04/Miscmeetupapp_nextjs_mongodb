@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Container } from 'react-bootstrap';
 import NewMeetupForm from '../../components/meetups/NewMeetupForm';
 
 function NewMeetupPage() {
@@ -16,22 +15,30 @@ function NewMeetupPage() {
       },
     });
 
-    const data = await response.json();
-    console.log(data);
-    router.push('/');
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Unable to publish the meetup.');
+    }
+
+    await router.push('/');
   }
 
   return (
     <Fragment>
       <Head>
-        <title>Add a New Meetup</title>
-        <meta name="description" content="Add your own meetups and create amazing networking opportunities." />
+        <title>Host a Meetup | Misc Meetups</title>
+        <meta
+          name='description'
+          content='Create a polished meetup listing with modern discovery details and organizer information.'
+        />
       </Head>
 
-      <Container className="mt-4">
-        <h1 className="text-center mb-4">Add New Meetup</h1>
-        <NewMeetupForm onAddMeetup={addMeetupHandler} />
-      </Container>
+      <NewMeetupForm
+        title='Create a meetup people want to join'
+        subtitle='Add the details attendees care about most and publish a more discoverable event listing.'
+        submitLabel='Publish meetup'
+        onSubmit={addMeetupHandler}
+      />
     </Fragment>
   );
 }

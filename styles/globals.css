@@ -1,12 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Open+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-primary: #f8fafc;
+  --bg-accent: #e0f2fe;
+  --surface-muted: #eff6ff;
+  --brand-primary: #0f766e;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+}
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: 'Open Sans', 'Lato', sans-serif;
+  font-family: 'Inter', sans-serif;
   margin: 0;
+  color: var(--text-primary);
+  background:
+    radial-gradient(circle at top left, rgba(186, 230, 253, 0.7), transparent 28%),
+    radial-gradient(circle at top right, rgba(167, 243, 208, 0.7), transparent 24%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 h1,
@@ -15,5 +47,29 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+p {
+  line-height: 1.65;
+}
+
+.form-control,
+.form-select {
+  border-radius: 18px;
+  padding: 0.85rem 1rem;
+  border-color: rgba(148, 163, 184, 0.4);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(20, 184, 166, 0.55);
+  box-shadow: 0 0 0 0.2rem rgba(20, 184, 166, 0.15);
+}
+
+.card {
+  border-color: transparent;
 }

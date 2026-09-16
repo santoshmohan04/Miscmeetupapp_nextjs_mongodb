@@ -1,7 +1,126 @@
-.detail {
-  text-align: center;
+.wrapper {
+  padding-top: 1rem;
 }
 
-.detail img {
+.heroCard {
+  border: 0;
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 28px 90px rgba(15, 23, 42, 0.12);
+}
+
+.image {
   width: 100%;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+}
+
+.content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.topMeta {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.content h1 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.lead {
+  color: var(--text-secondary);
+  font-size: 1.02rem;
+  margin-bottom: 1.5rem;
+}
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.highlights div {
+  padding: 1rem;
+  border-radius: 18px;
+  background: var(--surface-muted);
+}
+
+.highlights span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.highlights strong {
+  color: var(--text-primary);
+}
+
+.address {
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.socialProof {
+  color: var(--brand-primary);
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.actionGroup,
+.manageActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.actionGroup {
+  margin-bottom: 1rem;
+}
+
+.actionGroup :global(.btn),
+.manageActions :global(.btn) {
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  font-weight: 600;
+}
+
+.manageActions {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.inlineFeedback {
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.shareField {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 991px) {
+  .image {
+    min-height: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1.25rem;
+  }
+
+  .highlights {
+    grid-template-columns: 1fr;
+  }
 }
