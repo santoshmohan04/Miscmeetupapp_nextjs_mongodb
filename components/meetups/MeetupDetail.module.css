@@ -105,6 +105,10 @@
   color: var(--text-muted);
 }
 
+.shareField {
+  margin-bottom: 1rem;
+}
+
 @media (max-width: 991px) {
   .image {
     min-height: 260px;

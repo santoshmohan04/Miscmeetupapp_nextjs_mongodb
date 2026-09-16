@@ -67,10 +67,10 @@ export function sanitizeMeetupPayload(input = {}, existingMeetup = {}) {
     toText(existingMeetup.organizerName) ||
     'Community host';
   const organizerEmail = toText(input.organizerEmail) || toText(existingMeetup.organizerEmail);
-  const attendeeCount = Math.max(
-    0,
-    Number(input.attendeeCount ?? existingMeetup.attendeeCount ?? 0) || 0
-  );
+  const attendeeCountValue = Number(input.attendeeCount ?? existingMeetup.attendeeCount ?? 0);
+  const attendeeCount = Number.isFinite(attendeeCountValue)
+    ? Math.max(0, Math.floor(attendeeCountValue))
+    : 0;
 
   return {
     title: toText(input.title) || toText(existingMeetup.title),

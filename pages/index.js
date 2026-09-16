@@ -71,12 +71,15 @@ function HomePage({ meetups }) {
   }, [meetups, searchTerm, selectedCategory, selectedFormat, selectedSort]);
 
   const stats = useMemo(() => {
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
     const upcomingCount = meetups.filter((meetup) => {
       if (!meetup.eventDate) {
         return false;
       }
 
-      return new Date(meetup.eventDate) >= new Date(new Date().toISOString().split('T')[0]);
+      return new Date(`${meetup.eventDate}T00:00:00`) >= startOfToday;
     }).length;
 
     return [

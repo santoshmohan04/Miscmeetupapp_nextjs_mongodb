@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
+import { Badge, Button, Card, Col, Form, Row } from 'react-bootstrap';
 import classes from './MeetupDetail.module.css';
 
 function getSavedMeetupIds() {
@@ -24,6 +24,7 @@ function MeetupDetail({
 }) {
   const [isSaved, setIsSaved] = useState(false);
   const [shareMessage, setShareMessage] = useState('');
+  const [manualShareUrl, setManualShareUrl] = useState('');
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -71,19 +72,23 @@ function MeetupDetail({
     try {
       if (navigator.share) {
         await navigator.share(shareData);
+        setManualShareUrl('');
         setShareMessage('Meetup shared.');
         return;
       }
 
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl);
-        setShareMessage(`Link copied to clipboard: ${shareUrl}`);
+        setManualShareUrl('');
+        setShareMessage('Link copied to clipboard.');
         return;
       }
 
-      setShareMessage(`Copy this meetup link: ${shareUrl}`);
+      setManualShareUrl(shareUrl);
+      setShareMessage('Copy the meetup link from the field below.');
     } catch {
-      setShareMessage(`Unable to auto-share. Copy this meetup link: ${shareUrl}`);
+      setManualShareUrl(shareUrl);
+      setShareMessage('Unable to auto-share. Copy the meetup link below.');
     }
   }
 
@@ -169,6 +174,18 @@ function MeetupDetail({
                 <div className={classes.inlineFeedback}>
                   {shareMessage || errorMessage}
                 </div>
+              )}
+
+              {manualShareUrl && (
+                <Form.Group className={classes.shareField}>
+                  <Form.Label>Share link</Form.Label>
+                  <Form.Control
+                    type='text'
+                    readOnly
+                    value={manualShareUrl}
+                    onFocus={(event) => event.target.select()}
+                  />
+                </Form.Group>
               )}
 
               <div className={classes.manageActions}>
