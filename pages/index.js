@@ -22,16 +22,11 @@ function getEventTimestamp(eventDate) {
   return eventDate ? new Date(`${eventDate}T00:00:00`).getTime() : Number.MAX_SAFE_INTEGER;
 }
 
-function HomePage({ meetups }) {
+function HomePage({ meetups, featuredMeetups }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedFormat, setSelectedFormat] = useState('All');
   const [selectedSort, setSelectedSort] = useState('featured');
-
-  const featuredMeetups = useMemo(
-    () => meetups.filter((meetup) => meetup.isFeatured).slice(0, 3),
-    [meetups]
-  );
 
   const filteredMeetups = useMemo(() => {
     const lowerCasedSearch = searchTerm.trim().toLowerCase();
@@ -249,13 +244,17 @@ function HomePage({ meetups }) {
 export async function getStaticProps() {
   const { db, client } = await connectToDatabase(process.env.DB_NAME || 'test');
   const meetupsCollection = db.collection('meetups');
-  const meetups = await meetupsCollection.find().sort({ createdAt: -1 }).toArray();
+  const [meetups, featuredMeetups] = await Promise.all([
+    meetupsCollection.find().sort({ createdAt: -1 }).toArray(),
+    meetupsCollection.find({ isFeatured: true }).sort({ createdAt: -1 }).limit(3).toArray(),
+  ]);
 
   client.close();
 
   return {
     props: {
       meetups: meetups.map((meetup) => normalizeMeetupDocument(meetup)),
+      featuredMeetups: featuredMeetups.map((meetup) => normalizeMeetupDocument(meetup)),
     },
     revalidate: 30,
   };

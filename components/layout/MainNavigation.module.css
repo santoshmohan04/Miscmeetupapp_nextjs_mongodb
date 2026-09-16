@@ -64,6 +64,11 @@
   transform: translateY(-1px);
 }
 
+.nav a[aria-current='page'] {
+  color: white;
+  background: rgba(255, 255, 255, 0.16);
+}
+
 .cta {
   background: linear-gradient(135deg, #34d399, #14b8a6);
   color: #03251f !important;

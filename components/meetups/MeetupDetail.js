@@ -160,7 +160,7 @@ function MeetupDetail({
                 <Button variant='dark' onClick={handleShare}>
                   Share meetup
                 </Button>
-                <Button variant='outline-dark' onClick={toggleSave}>
+                <Button variant='outline-dark' onClick={toggleSave} aria-pressed={isSaved}>
                   {isSaved ? 'Saved' : 'Save'}
                 </Button>
                 {meetup.organizerEmail && (

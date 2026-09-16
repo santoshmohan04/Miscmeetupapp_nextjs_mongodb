@@ -1,7 +1,13 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import classes from './MainNavigation.module.css';
 
 function MainNavigation() {
+  const router = useRouter();
+  const isHomeRoute = router.pathname === '/';
+  const isDiscoverRoute = router.asPath === '/#discover';
+  const isNewMeetupRoute = router.pathname === '/new-meetup';
+
   return (
     <header className={classes.header}>
       <div className={classes.inner}>
@@ -11,9 +17,20 @@ function MainNavigation() {
         </Link>
 
         <nav className={classes.nav}>
-          <Link href='/'>Explore</Link>
-          <Link href={{ pathname: '/', hash: 'discover' }}>Discover</Link>
-          <Link href='/new-meetup' className={classes.cta}>
+          <Link href='/' aria-current={isHomeRoute ? 'page' : undefined}>
+            Explore
+          </Link>
+          <Link
+            href={{ pathname: '/', hash: 'discover' }}
+            aria-current={isDiscoverRoute ? 'page' : undefined}
+          >
+            Discover
+          </Link>
+          <Link
+            href='/new-meetup'
+            className={classes.cta}
+            aria-current={isNewMeetupRoute ? 'page' : undefined}
+          >
             Host a meetup
           </Link>
         </nav>

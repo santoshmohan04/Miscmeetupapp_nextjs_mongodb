@@ -67,6 +67,10 @@ export default async function handler(req, res) {
         { $set: updatedMeetup }
       );
 
+      await res.revalidate('/');
+      await res.revalidate(`/${meetupId}`);
+      await res.revalidate(`/edit/${meetupId}`);
+
       return res.status(200).json({ message: 'Meetup updated successfully!' });
     }
 
@@ -74,6 +78,9 @@ export default async function handler(req, res) {
       const result = await meetupsCollection.deleteOne({ _id: new ObjectId(meetupId) });
 
       if (result.deletedCount === 1) {
+        await res.revalidate('/');
+        await res.revalidate(`/${meetupId}`);
+        await res.revalidate(`/edit/${meetupId}`);
         return res.status(200).json({ message: 'Meetup deleted successfully!' });
       }
 
