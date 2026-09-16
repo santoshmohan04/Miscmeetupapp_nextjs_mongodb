@@ -5,7 +5,6 @@ import classes from './MainNavigation.module.css';
 function MainNavigation() {
   const router = useRouter();
   const isHomeRoute = router.pathname === '/';
-  const isDiscoverRoute = router.asPath === '/#discover';
   const isNewMeetupRoute = router.pathname === '/new-meetup';
 
   return (
@@ -20,12 +19,7 @@ function MainNavigation() {
           <Link href='/' aria-current={isHomeRoute ? 'page' : undefined}>
             Explore
           </Link>
-          <Link
-            href={{ pathname: '/', hash: 'discover' }}
-            aria-current={isDiscoverRoute ? 'page' : undefined}
-          >
-            Discover
-          </Link>
+          <Link href={{ pathname: '/', hash: 'discover' }}>Discover</Link>
           <Link
             href='/new-meetup'
             className={classes.cta}

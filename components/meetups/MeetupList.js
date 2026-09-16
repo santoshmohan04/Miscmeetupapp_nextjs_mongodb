@@ -2,7 +2,11 @@ import { Col, Row } from 'react-bootstrap';
 import MeetupItem from './MeetupItem';
 import classes from './MeetupList.module.css';
 
-function MeetupList({ meetups, emptyTitle, emptyDescription }) {
+function MeetupList({
+  meetups,
+  emptyTitle = 'No meetups available yet',
+  emptyDescription = 'Create the first meetup to help people discover a new experience.',
+}) {
   if (!meetups.length) {
     return (
       <div className={classes.emptyState}>
