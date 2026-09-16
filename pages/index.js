@@ -1,47 +1,259 @@
-import { Fragment } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import Head from 'next/head';
-import { MongoClient } from 'mongodb';
-const MONGO_URI = process.env.MONGO_URI;
+import Link from 'next/link';
+import { Badge, Button, Card, Col, Form, Row } from 'react-bootstrap';
 import MeetupList from '../components/meetups/MeetupList';
+import { connectToDatabase } from '../utils/db';
+import {
+  MEETUP_CATEGORIES,
+  MEETUP_FORMATS,
+  normalizeMeetupDocument,
+} from '../utils/meetups';
+import classes from '../styles/HomePage.module.css';
 
-function HomePage(props) {
+const SORT_OPTIONS = [
+  { value: 'featured', label: 'Trending first' },
+  { value: 'upcoming', label: 'Upcoming' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'alphabetical', label: 'A to Z' },
+];
+
+function HomePage({ meetups }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedFormat, setSelectedFormat] = useState('All');
+  const [selectedSort, setSelectedSort] = useState('featured');
+
+  const featuredMeetups = useMemo(
+    () => meetups.filter((meetup) => meetup.isFeatured).slice(0, 3),
+    [meetups]
+  );
+
+  const filteredMeetups = useMemo(() => {
+    const lowerCasedSearch = searchTerm.trim().toLowerCase();
+
+    return [...meetups]
+      .filter((meetup) => {
+        const matchesSearch =
+          !lowerCasedSearch ||
+          meetup.title.toLowerCase().includes(lowerCasedSearch) ||
+          meetup.city.toLowerCase().includes(lowerCasedSearch) ||
+          meetup.address.toLowerCase().includes(lowerCasedSearch);
+        const matchesCategory =
+          selectedCategory === 'All' || meetup.category === selectedCategory;
+        const matchesFormat =
+          selectedFormat === 'All' || meetup.eventType === selectedFormat;
+
+        return matchesSearch && matchesCategory && matchesFormat;
+      })
+      .sort((firstMeetup, secondMeetup) => {
+        if (selectedSort === 'alphabetical') {
+          return firstMeetup.title.localeCompare(secondMeetup.title);
+        }
+
+        if (selectedSort === 'newest') {
+          return new Date(secondMeetup.createdAt) - new Date(firstMeetup.createdAt);
+        }
+
+        if (selectedSort === 'upcoming') {
+          return (
+            (firstMeetup.eventDate ? new Date(firstMeetup.eventDate) : Number.MAX_SAFE_INTEGER) -
+            (secondMeetup.eventDate ? new Date(secondMeetup.eventDate) : Number.MAX_SAFE_INTEGER)
+          );
+        }
+
+        return (
+          Number(secondMeetup.isFeatured) - Number(firstMeetup.isFeatured) ||
+          secondMeetup.attendeeCount - firstMeetup.attendeeCount ||
+          firstMeetup.title.localeCompare(secondMeetup.title)
+        );
+      });
+  }, [meetups, searchTerm, selectedCategory, selectedFormat, selectedSort]);
+
+  const stats = useMemo(() => {
+    const upcomingCount = meetups.filter((meetup) => {
+      if (!meetup.eventDate) {
+        return false;
+      }
+
+      return new Date(meetup.eventDate) >= new Date(new Date().toISOString().split('T')[0]);
+    }).length;
+
+    return [
+      { label: 'Meetups live', value: meetups.length },
+      { label: 'Featured picks', value: featuredMeetups.length },
+      { label: 'Upcoming experiences', value: upcomingCount },
+    ];
+  }, [featuredMeetups.length, meetups]);
+
   return (
     <Fragment>
       <Head>
-        <title>React Meetups</title>
+        <title>Misc Meetups | Discover standout community events</title>
         <meta
           name='description'
-          content='Browse a huge list of highly active React meetups!'
+          content='Discover modern meetups, explore curated community experiences, and host standout events with Misc Meetups.'
         />
       </Head>
-      <MeetupList meetups={props.meetups} />
+
+      <section className={classes.hero}>
+        <div>
+          <Badge bg='light' text='dark' className={classes.heroBadge}>
+            New era meetup discovery
+          </Badge>
+          <h1>Find the right room, people, and energy for your next meetup.</h1>
+          <p>
+            Misc Meetups now blends discovery, hosting, and trust-building details into one
+            responsive experience for attendees and organizers.
+          </p>
+          <div className={classes.heroActions}>
+            <Link href='#discover'>
+              <Button variant='dark'>Explore meetups</Button>
+            </Link>
+            <Link href='/new-meetup'>
+              <Button variant='outline-dark'>Host an event</Button>
+            </Link>
+          </div>
+        </div>
+
+        <Card className={classes.heroPanel}>
+          <Card.Body>
+            <span className={classes.heroPanelLabel}>This week&apos;s pulse</span>
+            <h2>Better discovery, cleaner detail pages, and faster mobile browsing.</h2>
+            <ul>
+              <li>Search, filter, and sort meetups instantly</li>
+              <li>Surface featured experiences and event formats</li>
+              <li>Help people contact organizers with confidence</li>
+            </ul>
+          </Card.Body>
+        </Card>
+      </section>
+
+      <section className={classes.stats}>
+        {stats.map((stat) => (
+          <Card key={stat.label} className={classes.statCard}>
+            <Card.Body>
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
+            </Card.Body>
+          </Card>
+        ))}
+      </section>
+
+      {featuredMeetups.length > 0 && (
+        <section className={classes.featuredSection}>
+          <div className={classes.sectionHeading}>
+            <div>
+              <span className={classes.sectionKicker}>Curated highlights</span>
+              <h2>Featured community experiences</h2>
+            </div>
+          </div>
+          <MeetupList
+            meetups={featuredMeetups}
+            emptyTitle='No featured meetups yet'
+            emptyDescription='Mark standout meetups as featured to spotlight them here.'
+          />
+        </section>
+      )}
+
+      <section id='discover' className={classes.discoverySection}>
+        <div className={classes.sectionHeading}>
+          <div>
+            <span className={classes.sectionKicker}>Discover</span>
+            <h2>Search smarter and find your next community moment</h2>
+          </div>
+          <p>
+            Filter by category or format, sort by what matters, and quickly scan the best fit.
+          </p>
+        </div>
+
+        <Card className={classes.filterCard}>
+          <Card.Body>
+            <Row className='g-3'>
+              <Col lg={5}>
+                <Form.Group>
+                  <Form.Label>Search</Form.Label>
+                  <Form.Control
+                    type='search'
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder='Search by title, city, or venue'
+                  />
+                </Form.Group>
+              </Col>
+              <Col sm={6} lg={2}>
+                <Form.Group>
+                  <Form.Label>Category</Form.Label>
+                  <Form.Select
+                    value={selectedCategory}
+                    onChange={(event) => setSelectedCategory(event.target.value)}
+                  >
+                    <option value='All'>All</option>
+                    {MEETUP_CATEGORIES.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col sm={6} lg={2}>
+                <Form.Group>
+                  <Form.Label>Format</Form.Label>
+                  <Form.Select
+                    value={selectedFormat}
+                    onChange={(event) => setSelectedFormat(event.target.value)}
+                  >
+                    <option value='All'>All</option>
+                    {MEETUP_FORMATS.map((format) => (
+                      <option key={format} value={format}>
+                        {format}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col sm={6} lg={3}>
+                <Form.Group>
+                  <Form.Label>Sort</Form.Label>
+                  <Form.Select
+                    value={selectedSort}
+                    onChange={(event) => setSelectedSort(event.target.value)}
+                  >
+                    {SORT_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+
+        <MeetupList
+          meetups={filteredMeetups}
+          emptyTitle='No meetups match your filters'
+          emptyDescription='Try clearing one filter or host a fresh meetup to spark new interest.'
+        />
+      </section>
     </Fragment>
   );
 }
 
 export async function getStaticProps() {
-  // fetch data from an API
-  const client = await MongoClient.connect(
-    MONGO_URI
-  );
-  const db = client.db('test');
-
+  const { db, client } = await connectToDatabase();
   const meetupsCollection = db.collection('meetups');
-
-  const meetups = await meetupsCollection.find().toArray();
+  const meetups = await meetupsCollection.find().sort({ createdAt: -1 }).toArray();
 
   client.close();
 
   return {
     props: {
-      meetups: meetups.map((meetup) => ({
-        title: meetup.title,
-        address: meetup.address,
-        image: meetup.image,
-        id: meetup._id.toString(),
-      })),
+      meetups: meetups.map((meetup) => normalizeMeetupDocument(meetup)),
     },
-    revalidate: 1,
+    revalidate: 30,
   };
 }
 

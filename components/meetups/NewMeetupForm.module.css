@@ -1,45 +1,62 @@
-.form {
-  padding: 1rem;
+.card {
+  border: 0;
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 28px 90px rgba(15, 23, 42, 0.12);
 }
 
-.control {
+.body {
+  padding: 2rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: var(--brand-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.header h1 {
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
-.control label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.control input,
-.control textarea {
-  display: block;
-  font: inherit;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  padding: 0.25rem;
-  width: 100%;
+.header p {
+  margin: 0;
+  color: var(--text-muted);
 }
 
 .actions {
-  margin-top: 1rem;
-  text-align: right;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.actions button {
-  font: inherit;
-  cursor: pointer;
-  background-color: #1abc9c;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border: 1px solid #1abc9c;
-  border-radius: 4px;
-  font-weight: bold;
+.actions :global(.btn) {
+  border-radius: 999px;
+  min-width: 180px;
+  padding: 0.9rem 1.25rem;
+  font-weight: 600;
 }
 
-.actions button:hover,
-.actions button:active {
-  background-color: #1abc9c;
-  border-color: #1abc9c;
+@media (max-width: 768px) {
+  .body {
+    padding: 1.25rem;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions :global(.btn) {
+    width: 100%;
+  }
 }

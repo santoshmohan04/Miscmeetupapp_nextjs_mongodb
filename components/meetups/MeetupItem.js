@@ -1,24 +1,58 @@
-import { useRouter } from "next/router";
-import { Card, Button } from "react-bootstrap";
+import Link from 'next/link';
+import { Badge, Button, Card } from 'react-bootstrap';
+import classes from './MeetupItem.module.css';
 
-function MeetupItem(props) {
-  const router = useRouter();
-
-  function showDetailsHandler() {
-    router.push("/" + props.id);
-  }
+function MeetupItem({
+  id,
+  image,
+  title,
+  address,
+  city,
+  category,
+  eventType,
+  eventDate,
+  isFeatured,
+  attendeeCount,
+}) {
+  const dateLabel = eventDate
+    ? new Date(eventDate).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : 'Date coming soon';
 
   return (
-    <Card className="h-100 shadow-sm">
-      <Card.Img variant="top" src={props.image} alt={props.title} className="img-fluid" />
-      <Card.Body>
-        <Card.Title>{props.title}</Card.Title>
-        <Card.Text>
-          <strong>Address:</strong> {props.address}
+    <Card className={classes.card}>
+      <div className={classes.imageWrap}>
+        <Card.Img variant='top' src={image} alt={title} className={classes.image} />
+        <div className={classes.badges}>
+          {isFeatured && <Badge bg='warning' text='dark'>Featured</Badge>}
+          <Badge bg='light' text='dark'>
+            {category}
+          </Badge>
+        </div>
+      </div>
+
+      <Card.Body className={classes.body}>
+        <div className={classes.metaRow}>
+          <span>{eventType}</span>
+          <span>{dateLabel}</span>
+        </div>
+        <Card.Title className={classes.title}>{title}</Card.Title>
+        <Card.Text className={classes.location}>
+          {city || 'City to be announced'} · {address}
         </Card.Text>
-        <Button variant="primary" onClick={showDetailsHandler}>
-          Show Details
-        </Button>
+        <p className={classes.socialProof}>
+          {attendeeCount > 0
+            ? `${attendeeCount}+ people interested`
+            : 'Be the first to show interest'}
+        </p>
+        <div className={classes.actions}>
+          <Link href={`/${id}`}>
+            <Button variant='dark'>View experience</Button>
+          </Link>
+        </div>
       </Card.Body>
     </Card>
   );

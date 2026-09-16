@@ -1,5 +1,17 @@
-.list {
-  list-style: none;
+.emptyState {
+  padding: 3rem 1.5rem;
+  border: 1px dashed rgba(148, 163, 184, 0.55);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+
+.emptyState h3 {
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.emptyState p {
   margin: 0;
-  padding: 0;
+  color: var(--text-muted);
 }

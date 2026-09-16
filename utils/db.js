@@ -1,10 +1,10 @@
 import { MongoClient } from 'mongodb';
 
 const MONGO_URI = process.env.MONGO_URI;
-const DB_NAME = process.env.DB_NAME;
+const DB_NAME = process.env.DB_NAME || 'test';
 
 if (!MONGO_URI) {
-  throw new Error("Missing MONGO_URI in environment variables");
+  throw new Error('Missing MONGO_URI in environment variables');
 }
 
 export async function connectToDatabase() {
