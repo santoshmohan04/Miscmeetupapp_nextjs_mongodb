@@ -69,6 +69,7 @@ export default async function handler(req, res) {
 
       await res.revalidate('/');
       await res.revalidate(`/${meetupId}`);
+      await res.revalidate(`/edit/${meetupId}`);
 
       return res.status(200).json({ message: 'Meetup updated successfully!' });
     }
@@ -78,7 +79,6 @@ export default async function handler(req, res) {
 
       if (result.deletedCount === 1) {
         await res.revalidate('/');
-        await res.revalidate(`/${meetupId}`);
         return res.status(200).json({ message: 'Meetup deleted successfully!' });
       }
 
