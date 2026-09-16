@@ -39,8 +39,21 @@ function normalizeDate(value) {
     return text;
   }
 
+  const calendarDateMatch = text.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (calendarDateMatch) {
+    return calendarDateMatch[1];
+  }
+
   const parsed = new Date(text);
-  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0];
+  if (Number.isNaN(parsed.getTime())) {
+    return '';
+  }
+
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, '0');
+  const day = String(parsed.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 }
 
 function deriveCityFromAddress(address) {

@@ -2,6 +2,19 @@ import { useEffect, useMemo, useState } from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
 import classes from './MeetupDetail.module.css';
 
+function getSavedMeetupIds() {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
+  try {
+    const savedMeetups = JSON.parse(window.localStorage.getItem('savedMeetups') || '[]');
+    return Array.isArray(savedMeetups) ? savedMeetups : [];
+  } catch {
+    return [];
+  }
+}
+
 function MeetupDetail({
   meetup,
   onEdit,
@@ -17,7 +30,7 @@ function MeetupDetail({
       return;
     }
 
-    const savedMeetups = JSON.parse(window.localStorage.getItem('savedMeetups') || '[]');
+    const savedMeetups = getSavedMeetupIds();
     setIsSaved(savedMeetups.includes(meetup.id));
   }, [meetup.id]);
 
@@ -65,7 +78,7 @@ function MeetupDetail({
       await navigator.clipboard.writeText(shareUrl);
       setShareMessage('Link copied to clipboard.');
     } catch {
-      setShareMessage('Sharing cancelled.');
+      setShareMessage('Unable to share right now. Please copy the page URL manually.');
     }
   }
 
@@ -74,7 +87,7 @@ function MeetupDetail({
       return;
     }
 
-    const savedMeetups = JSON.parse(window.localStorage.getItem('savedMeetups') || '[]');
+    const savedMeetups = getSavedMeetupIds();
     const nextSavedMeetups = isSaved
       ? savedMeetups.filter((savedId) => savedId !== meetup.id)
       : [...new Set([...savedMeetups, meetup.id])];
