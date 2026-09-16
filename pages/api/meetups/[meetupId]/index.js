@@ -26,8 +26,30 @@ export default async function handler(req, res) {
         return res.status(404).json({ message: 'Meetup not found' });
       }
 
+      const submittedMeetup = req.body || {};
+      const hasField = (fieldName) =>
+        Object.prototype.hasOwnProperty.call(submittedMeetup, fieldName);
+
       const updatedMeetup = sanitizeMeetupPayload({
-        ...req.body,
+        title: hasField('title') ? submittedMeetup.title : existingMeetup.title,
+        image: hasField('image') ? submittedMeetup.image : existingMeetup.image,
+        address: hasField('address') ? submittedMeetup.address : existingMeetup.address,
+        description: hasField('description')
+          ? submittedMeetup.description
+          : existingMeetup.description,
+        category: hasField('category') ? submittedMeetup.category : existingMeetup.category,
+        eventType: hasField('eventType') ? submittedMeetup.eventType : existingMeetup.eventType,
+        eventDate: hasField('eventDate') ? submittedMeetup.eventDate : existingMeetup.eventDate,
+        city: hasField('city') ? submittedMeetup.city : existingMeetup.city,
+        organizerName: hasField('organizerName')
+          ? submittedMeetup.organizerName
+          : existingMeetup.organizerName,
+        organizerEmail: hasField('organizerEmail')
+          ? submittedMeetup.organizerEmail
+          : existingMeetup.organizerEmail,
+        isFeatured: hasField('isFeatured')
+          ? submittedMeetup.isFeatured
+          : existingMeetup.isFeatured,
         attendeeCount: existingMeetup.attendeeCount,
         createdAt: existingMeetup.createdAt,
       }, { applyDefaults: false });
