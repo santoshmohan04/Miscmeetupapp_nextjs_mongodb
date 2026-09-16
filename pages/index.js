@@ -107,12 +107,12 @@ function HomePage({ meetups }) {
             responsive experience for attendees and organizers.
           </p>
           <div className={classes.heroActions}>
-            <Link href='#discover'>
-              <Button variant='dark'>Explore meetups</Button>
-            </Link>
-            <Link href='/new-meetup'>
-              <Button variant='outline-dark'>Host an event</Button>
-            </Link>
+            <Button as='a' href='#discover' variant='dark'>
+              Explore meetups
+            </Button>
+            <Button as={Link} href='/new-meetup' variant='outline-dark'>
+              Host an event
+            </Button>
           </div>
         </div>
 

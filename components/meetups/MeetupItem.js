@@ -49,9 +49,9 @@ function MeetupItem({
             : 'Be the first to show interest'}
         </p>
         <div className={classes.actions}>
-          <Link href={`/${id}`}>
-            <Button variant='dark'>View experience</Button>
-          </Link>
+          <Button as={Link} href={`/${id}`} variant='dark'>
+            View experience
+          </Button>
         </div>
       </Card.Body>
     </Card>

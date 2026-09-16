@@ -13,6 +13,7 @@ export default async function handler(req, res) {
   }
 
   let client;
+  let db;
 
   try {
     ({ client, db } = await connectToDatabase());

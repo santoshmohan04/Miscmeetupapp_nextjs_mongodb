@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import Head from 'next/head';
-import { MongoClient, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { useRouter } from 'next/router';
 import MeetupDetail from '../../components/meetups/MeetupDetail';
 import { connectToDatabase } from '../../utils/db';
@@ -59,8 +59,7 @@ function MeetupDetails(props) {
 }
 
 export async function getStaticPaths() {
-  const client = await MongoClient.connect(process.env.MONGO_URI);
-  const db = client.db('test');
+  const { db, client } = await connectToDatabase();
   const meetupsCollection = db.collection('meetups');
   const meetups = await meetupsCollection.find({}, { projection: { _id: 1 } }).toArray();
 
