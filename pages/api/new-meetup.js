@@ -19,7 +19,7 @@ async function handler(req, res) {
     });
   }
 
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase(process.env.DB_NAME || 'test');
 
   try {
     const meetupsCollection = db.collection('meetups');

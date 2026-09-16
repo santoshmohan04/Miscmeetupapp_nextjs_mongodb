@@ -75,10 +75,15 @@ function MeetupDetail({
         return;
       }
 
-      await navigator.clipboard.writeText(shareUrl);
-      setShareMessage('Link copied to clipboard.');
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        setShareMessage(`Link copied to clipboard: ${shareUrl}`);
+        return;
+      }
+
+      setShareMessage(`Copy this meetup link: ${shareUrl}`);
     } catch {
-      setShareMessage('Unable to share right now. Please copy the page URL manually.');
+      setShareMessage(`Unable to auto-share. Copy this meetup link: ${shareUrl}`);
     }
   }
 

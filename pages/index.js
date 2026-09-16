@@ -243,7 +243,7 @@ function HomePage({ meetups }) {
 }
 
 export async function getStaticProps() {
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase(process.env.DB_NAME || 'test');
   const meetupsCollection = db.collection('meetups');
   const meetups = await meetupsCollection.find().sort({ createdAt: -1 }).toArray();
 

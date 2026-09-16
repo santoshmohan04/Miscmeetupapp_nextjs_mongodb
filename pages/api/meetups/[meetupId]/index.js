@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   let db;
 
   try {
-    ({ client, db } = await connectToDatabase());
+    ({ client, db } = await connectToDatabase(process.env.DB_NAME || 'test'));
     const meetupsCollection = db.collection('meetups');
 
     if (req.method === 'PUT') {

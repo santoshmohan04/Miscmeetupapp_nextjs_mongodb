@@ -59,7 +59,7 @@ function MeetupDetails(props) {
 }
 
 export async function getStaticPaths() {
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase(process.env.DB_NAME || 'test');
   const meetupsCollection = db.collection('meetups');
   const meetups = await meetupsCollection.find({}, { projection: { _id: 1 } }).toArray();
 
@@ -80,7 +80,7 @@ export async function getStaticProps(context) {
     return { notFound: true };
   }
 
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase(process.env.DB_NAME || 'test');
   const meetupsCollection = db.collection('meetups');
 
   try {
