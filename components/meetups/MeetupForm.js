@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, Button, Card, Col, Form, Row, Spinner } from 'react-bootstrap';
 import classes from './NewMeetupForm.module.css';
 import {
@@ -21,6 +21,12 @@ function MeetupForm({
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setFormData(defaults);
+    setErrors({});
+    setFormError('');
+  }, [defaults]);
 
   function changeHandler(event) {
     const { name, value, type, checked } = event.target;

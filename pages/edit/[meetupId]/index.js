@@ -63,7 +63,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   const meetupId = context.params.meetupId;
 
-  if (!meetupId || typeof meetupId !== 'string') {
+  if (!meetupId || typeof meetupId !== 'string' || !ObjectId.isValid(meetupId)) {
     return { notFound: true };
   }
 
