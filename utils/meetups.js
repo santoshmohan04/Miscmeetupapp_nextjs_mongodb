@@ -56,13 +56,24 @@ function deriveCityFromAddress(address) {
   return segments.length > 1 ? segments[segments.length - 2] : segments[0] || '';
 }
 
-export function sanitizeMeetupPayload(input = {}) {
-  const category = normalizeCategory(toText(input.category));
-  const eventType = normalizeFormat(toText(input.eventType));
+export function sanitizeMeetupPayload(input = {}, options = {}) {
+  const { applyDefaults = true } = options;
+  const categoryValue = toText(input.category);
+  const eventTypeValue = toText(input.eventType);
   const eventDate = normalizeDate(input.eventDate);
   const address = toText(input.address);
-  const city = toText(input.city) || deriveCityFromAddress(address);
-  const organizerName = toText(input.organizerName) || 'Community host';
+  const category = categoryValue
+    ? normalizeCategory(categoryValue)
+    : applyDefaults
+      ? DEFAULT_CATEGORY
+      : '';
+  const eventType = eventTypeValue
+    ? normalizeFormat(eventTypeValue)
+    : applyDefaults
+      ? DEFAULT_FORMAT
+      : '';
+  const city = toText(input.city) || (applyDefaults ? deriveCityFromAddress(address) : '');
+  const organizerName = toText(input.organizerName) || (applyDefaults ? 'Community host' : '');
   const organizerEmail = toText(input.organizerEmail);
   const attendeeCountValue = Number(input.attendeeCount ?? 0);
   const attendeeCount = Number.isFinite(attendeeCountValue)
@@ -136,7 +147,7 @@ export function validateMeetupPayload(payload) {
 }
 
 export function normalizeMeetupDocument(meetup = {}) {
-  const sanitized = sanitizeMeetupPayload(meetup);
+  const sanitized = sanitizeMeetupPayload(meetup, { applyDefaults: true });
 
   return {
     id: meetup._id ? meetup._id.toString() : meetup.id,
@@ -146,7 +157,7 @@ export function normalizeMeetupDocument(meetup = {}) {
 }
 
 export function getMeetupInitialValues(meetup = {}) {
-  const sanitized = sanitizeMeetupPayload(meetup);
+  const sanitized = sanitizeMeetupPayload(meetup, { applyDefaults: true });
 
   return {
     ...sanitized,

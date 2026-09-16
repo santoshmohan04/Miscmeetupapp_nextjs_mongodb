@@ -30,7 +30,7 @@ export default async function handler(req, res) {
         ...req.body,
         attendeeCount: existingMeetup.attendeeCount,
         createdAt: existingMeetup.createdAt,
-      });
+      }, { applyDefaults: false });
       const validationErrors = validateMeetupPayload(updatedMeetup);
 
       if (Object.keys(validationErrors).length > 0) {

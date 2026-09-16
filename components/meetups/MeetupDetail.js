@@ -86,7 +86,11 @@ function MeetupDetail({
 
       setManualShareUrl(shareUrl);
       setShareMessage('Copy the meetup link from the field below.');
-    } catch {
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        return;
+      }
+
       setManualShareUrl(shareUrl);
       setShareMessage('Unable to auto-share. Copy the meetup link below.');
     }
